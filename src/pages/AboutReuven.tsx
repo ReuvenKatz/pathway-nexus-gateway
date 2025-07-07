@@ -61,8 +61,15 @@ const AboutReuven = () => {
               <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white px-8 py-3">
                 Contact Reuven
               </Button>
-              <Button variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
-                Schedule a Meeting
+              <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
+                <a 
+                  href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Schedule a meeting with Reuven Katz"
+                >
+                  Schedule a Meeting
+                </a>
               </Button>
             </div>
           </div>

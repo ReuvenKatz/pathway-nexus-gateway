@@ -72,8 +72,15 @@ const Header = () => {
                 )}
               </div>
             ))}
-            <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-              Schedule Meeting
+            <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
+              <a 
+                href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Schedule a meeting with Reuven Katz"
+              >
+                Schedule Meeting
+              </a>
             </Button>
           </div>
 
@@ -126,8 +133,16 @@ const Header = () => {
                 </div>
               ))}
               <div className="px-3 py-2">
-                <Button className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                  Schedule Meeting
+                <Button asChild className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
+                  <a 
+                    href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label="Schedule a meeting with Reuven Katz"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Schedule Meeting
+                  </a>
                 </Button>
               </div>
             </div>
