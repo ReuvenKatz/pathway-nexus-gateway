@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -28,11 +29,15 @@ const Home = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white px-8 py-3 text-lg">
-                Explore Our Services
+              <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white px-8 py-3 text-lg">
+                <Link to="/services">
+                  Explore Our Services
+                </Link>
               </Button>
-              <Button variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3 text-lg">
-                Get Started Today
+              <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3 text-lg">
+                <Link to="/contact">
+                  Get Started Today
+                </Link>
               </Button>
             </div>
           </div>
@@ -53,8 +58,10 @@ const Home = () => {
                   Experienced PhD consultant specializing in research management and academic career development 
                   mainly in science and engineering.
                 </p>
-                <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                  Learn More
+                <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
+                  <Link to="/about">
+                    Learn More
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -68,8 +75,10 @@ const Home = () => {
                 <p className="text-gray-600 mb-6">
                   Expert consultant with extensive experience in students' guidance in humanities.
                 </p>
-                <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                  Learn More
+                <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
+                  <Link to="/about">
+                    Learn More
+                  </Link>
                 </Button>
               </CardContent>
             </Card>

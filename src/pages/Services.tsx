@@ -111,7 +111,7 @@ const Services = () => {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
-                    <Link to="/schedule">
+                    <Link to="/contact">
                       Schedule a Meeting
                     </Link>
                   </Button>
@@ -226,7 +226,7 @@ const Services = () => {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
-                    <Link to="/schedule">
+                    <Link to="/contact">
                       Schedule a Meeting
                     </Link>
                   </Button>
