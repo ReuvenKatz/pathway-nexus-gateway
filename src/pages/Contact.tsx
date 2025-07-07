@@ -5,10 +5,25 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  field: string;
+  stage: string;
+  message: string;
+}
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const reuvenForm = useForm<ContactFormData>();
+  const hilaForm = useForm<ContactFormData>();
+
   useEffect(() => {
     // Load Calendly widget script
     const script = document.createElement('script');
@@ -24,6 +39,44 @@ const Contact = () => {
       }
     };
   }, []);
+
+  const handleFormSubmit = async (data: ContactFormData, contactPerson: 'reuven' | 'hila') => {
+    setIsSubmitting(true);
+    
+    try {
+      const { data: response, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          ...data,
+          contactPerson
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Message sent successfully!",
+        description: "Thank you for reaching out. We'll get back to you soon.",
+      });
+
+      // Reset the appropriate form
+      if (contactPerson === 'reuven') {
+        reuvenForm.reset();
+      } else {
+        hilaForm.reset();
+      }
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Error sending message",
+        description: "Please try again later or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -65,45 +118,69 @@ const Contact = () => {
                   <CardTitle className="text-2xl font-serif text-[#2E4A87]">Get In Touch with Reuven</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="reuven-name">Full Name</Label>
-                    <Input id="reuven-name" placeholder="Your full name" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="reuven-email">Email Address</Label>
-                    <Input id="reuven-email" type="email" placeholder="your.email@example.com" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="reuven-field">Field of Study</Label>
-                    <Input id="reuven-field" placeholder="e.g., Computer Science, Psychology, etc." />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="reuven-stage">Current Stage</Label>
-                    <select id="reuven-stage" className="w-full p-2 border border-gray-300 rounded-md">
-                      <option value="">Select your current stage</option>
-                      <option value="early-phd">Early PhD (1st-2nd year)</option>
-                      <option value="mid-phd">Mid PhD (3rd-4th year)</option>
-                      <option value="late-phd">Late PhD (5th+ year)</option>
-                      <option value="writing">Writing dissertation</option>
-                      <option value="recent-grad">Recent PhD graduate</option>
-                    </select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="reuven-message">How can Reuven help you?</Label>
-                    <Textarea 
-                      id="reuven-message" 
-                      placeholder="Tell us about your specific challenges or goals..."
-                      rows={4}
-                    />
-                  </div>
-                  
-                  <Button className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                    Send Message to Reuven
-                  </Button>
+                  <form onSubmit={reuvenForm.handleSubmit((data) => handleFormSubmit(data, 'reuven'))} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="reuven-name">Full Name</Label>
+                      <Input 
+                        id="reuven-name" 
+                        placeholder="Your full name" 
+                        {...reuvenForm.register('name', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="reuven-email">Email Address</Label>
+                      <Input 
+                        id="reuven-email" 
+                        type="email" 
+                        placeholder="your.email@example.com" 
+                        {...reuvenForm.register('email', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="reuven-field">Field of Study</Label>
+                      <Input 
+                        id="reuven-field" 
+                        placeholder="e.g., Computer Science, Psychology, etc." 
+                        {...reuvenForm.register('field', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="reuven-stage">Current Stage</Label>
+                      <select 
+                        id="reuven-stage" 
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        {...reuvenForm.register('stage', { required: true })}
+                      >
+                        <option value="">Select your current stage</option>
+                        <option value="early-phd">Early PhD (1st-2nd year)</option>
+                        <option value="mid-phd">Mid PhD (3rd-4th year)</option>
+                        <option value="late-phd">Late PhD (5th+ year)</option>
+                        <option value="writing">Writing dissertation</option>
+                        <option value="recent-grad">Recent PhD graduate</option>
+                      </select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="reuven-message">How can Reuven help you?</Label>
+                      <Textarea 
+                        id="reuven-message" 
+                        placeholder="Tell us about your specific challenges or goals..."
+                        rows={4}
+                        {...reuvenForm.register('message', { required: true })}
+                      />
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Message to Reuven'}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
 
@@ -152,45 +229,69 @@ const Contact = () => {
                   <CardTitle className="text-2xl font-serif text-[#2E4A87]">Get In Touch with Hila</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="hila-name">Full Name</Label>
-                    <Input id="hila-name" placeholder="Your full name" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="hila-email">Email Address</Label>
-                    <Input id="hila-email" type="email" placeholder="your.email@example.com" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="hila-field">Field of Study</Label>
-                    <Input id="hila-field" placeholder="e.g., Computer Science, Psychology, etc." />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="hila-stage">Current Stage</Label>
-                    <select id="hila-stage" className="w-full p-2 border border-gray-300 rounded-md">
-                      <option value="">Select your current stage</option>
-                      <option value="early-phd">Early PhD (1st-2nd year)</option>
-                      <option value="mid-phd">Mid PhD (3rd-4th year)</option>
-                      <option value="late-phd">Late PhD (5th+ year)</option>
-                      <option value="writing">Writing dissertation</option>
-                      <option value="recent-grad">Recent PhD graduate</option>
-                    </select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="hila-message">How can Hila help you?</Label>
-                    <Textarea 
-                      id="hila-message" 
-                      placeholder="Tell us about your specific challenges or goals..."
-                      rows={4}
-                    />
-                  </div>
-                  
-                  <Button className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                    Send Message to Hila
-                  </Button>
+                  <form onSubmit={hilaForm.handleSubmit((data) => handleFormSubmit(data, 'hila'))} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="hila-name">Full Name</Label>
+                      <Input 
+                        id="hila-name" 
+                        placeholder="Your full name" 
+                        {...hilaForm.register('name', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="hila-email">Email Address</Label>
+                      <Input 
+                        id="hila-email" 
+                        type="email" 
+                        placeholder="your.email@example.com" 
+                        {...hilaForm.register('email', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="hila-field">Field of Study</Label>
+                      <Input 
+                        id="hila-field" 
+                        placeholder="e.g., Computer Science, Psychology, etc." 
+                        {...hilaForm.register('field', { required: true })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="hila-stage">Current Stage</Label>
+                      <select 
+                        id="hila-stage" 
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        {...hilaForm.register('stage', { required: true })}
+                      >
+                        <option value="">Select your current stage</option>
+                        <option value="early-phd">Early PhD (1st-2nd year)</option>
+                        <option value="mid-phd">Mid PhD (3rd-4th year)</option>
+                        <option value="late-phd">Late PhD (5th+ year)</option>
+                        <option value="writing">Writing dissertation</option>
+                        <option value="recent-grad">Recent PhD graduate</option>
+                      </select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="hila-message">How can Hila help you?</Label>
+                      <Textarea 
+                        id="hila-message" 
+                        placeholder="Tell us about your specific challenges or goals..."
+                        rows={4}
+                        {...hilaForm.register('message', { required: true })}
+                      />
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Message to Hila'}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
 
