@@ -5,10 +5,32 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
 
 const Contact = () => {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Form states for Reuven
+  const [reuvenForm, setReuvenForm] = useState({
+    name: '',
+    email: '',
+    field: '',
+    stage: '',
+    message: ''
+  });
+
+  // Form states for Hila
+  const [hilaForm, setHilaForm] = useState({
+    name: '',
+    email: '',
+    field: '',
+    stage: '',
+    message: ''
+  });
+
   useEffect(() => {
     // Load Calendly widget script
     const script = document.createElement('script');
@@ -24,6 +46,68 @@ const Contact = () => {
       }
     };
   }, []);
+
+  const handleSubmit = async (contactType: 'reuven' | 'hila') => {
+    const formData = contactType === 'reuven' ? reuvenForm : hilaForm;
+    
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Error", 
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          ...formData,
+          contactType
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // Reset form
+      if (contactType === 'reuven') {
+        setReuvenForm({ name: '', email: '', field: '', stage: '', message: '' });
+      } else {
+        setHilaForm({ name: '', email: '', field: '', stage: '', message: '' });
+      }
+
+      toast({
+        title: "Message Sent!",
+        description: `Your message has been sent to ${contactType === 'reuven' ? 'Reuven' : 'Hila'}. We'll get back to you soon!`,
+      });
+
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -66,23 +150,44 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="reuven-name">Full Name</Label>
-                    <Input id="reuven-name" placeholder="Your full name" />
+                    <Label htmlFor="reuven-name">Full Name *</Label>
+                    <Input 
+                      id="reuven-name" 
+                      placeholder="Your full name"
+                      value={reuvenForm.name}
+                      onChange={(e) => setReuvenForm({...reuvenForm, name: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="reuven-email">Email Address</Label>
-                    <Input id="reuven-email" type="email" placeholder="your.email@example.com" />
+                    <Label htmlFor="reuven-email">Email Address *</Label>
+                    <Input 
+                      id="reuven-email" 
+                      type="email" 
+                      placeholder="your.email@example.com"
+                      value={reuvenForm.email}
+                      onChange={(e) => setReuvenForm({...reuvenForm, email: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="reuven-field">Field of Study</Label>
-                    <Input id="reuven-field" placeholder="e.g., Computer Science, Psychology, etc." />
+                    <Input 
+                      id="reuven-field" 
+                      placeholder="e.g., Computer Science, Psychology, etc."
+                      value={reuvenForm.field}
+                      onChange={(e) => setReuvenForm({...reuvenForm, field: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="reuven-stage">Current Stage</Label>
-                    <select id="reuven-stage" className="w-full p-2 border border-gray-300 rounded-md">
+                    <select 
+                      id="reuven-stage" 
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={reuvenForm.stage}
+                      onChange={(e) => setReuvenForm({...reuvenForm, stage: e.target.value})}
+                    >
                       <option value="">Select your current stage</option>
                       <option value="early-phd">Early PhD (1st-2nd year)</option>
                       <option value="mid-phd">Mid PhD (3rd-4th year)</option>
@@ -93,16 +198,22 @@ const Contact = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="reuven-message">How can Reuven help you?</Label>
+                    <Label htmlFor="reuven-message">How can Reuven help you? *</Label>
                     <Textarea 
                       id="reuven-message" 
                       placeholder="Tell us about your specific challenges or goals..."
                       rows={4}
+                      value={reuvenForm.message}
+                      onChange={(e) => setReuvenForm({...reuvenForm, message: e.target.value})}
                     />
                   </div>
                   
-                  <Button className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                    Send Message to Reuven
+                  <Button 
+                    className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white"
+                    onClick={() => handleSubmit('reuven')}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Sending...' : 'Send Message to Reuven'}
                   </Button>
                 </CardContent>
               </Card>
@@ -153,23 +264,44 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="hila-name">Full Name</Label>
-                    <Input id="hila-name" placeholder="Your full name" />
+                    <Label htmlFor="hila-name">Full Name *</Label>
+                    <Input 
+                      id="hila-name" 
+                      placeholder="Your full name"
+                      value={hilaForm.name}
+                      onChange={(e) => setHilaForm({...hilaForm, name: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="hila-email">Email Address</Label>
-                    <Input id="hila-email" type="email" placeholder="your.email@example.com" />
+                    <Label htmlFor="hila-email">Email Address *</Label>
+                    <Input 
+                      id="hila-email" 
+                      type="email" 
+                      placeholder="your.email@example.com"
+                      value={hilaForm.email}
+                      onChange={(e) => setHilaForm({...hilaForm, email: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="hila-field">Field of Study</Label>
-                    <Input id="hila-field" placeholder="e.g., Computer Science, Psychology, etc." />
+                    <Input 
+                      id="hila-field" 
+                      placeholder="e.g., Computer Science, Psychology, etc."
+                      value={hilaForm.field}
+                      onChange={(e) => setHilaForm({...hilaForm, field: e.target.value})}
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="hila-stage">Current Stage</Label>
-                    <select id="hila-stage" className="w-full p-2 border border-gray-300 rounded-md">
+                    <select 
+                      id="hila-stage" 
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={hilaForm.stage}
+                      onChange={(e) => setHilaForm({...hilaForm, stage: e.target.value})}
+                    >
                       <option value="">Select your current stage</option>
                       <option value="early-phd">Early PhD (1st-2nd year)</option>
                       <option value="mid-phd">Mid PhD (3rd-4th year)</option>
@@ -180,16 +312,22 @@ const Contact = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="hila-message">How can Hila help you?</Label>
+                    <Label htmlFor="hila-message">How can Hila help you? *</Label>
                     <Textarea 
                       id="hila-message" 
                       placeholder="Tell us about your specific challenges or goals..."
                       rows={4}
+                      value={hilaForm.message}
+                      onChange={(e) => setHilaForm({...hilaForm, message: e.target.value})}
                     />
                   </div>
                   
-                  <Button className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                    Send Message to Hila
+                  <Button 
+                    className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white"
+                    onClick={() => handleSubmit('hila')}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Sending...' : 'Send Message to Hila'}
                   </Button>
                 </CardContent>
               </Card>
