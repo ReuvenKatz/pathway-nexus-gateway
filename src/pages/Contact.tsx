@@ -21,8 +21,25 @@ interface ContactFormData {
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const reuvenForm = useForm<ContactFormData>();
-  const hilaForm = useForm<ContactFormData>();
+  const reuvenForm = useForm<ContactFormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      field: '',
+      stage: '',
+      message: ''
+    }
+  });
+  
+  const hilaForm = useForm<ContactFormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      field: '',
+      stage: '',
+      message: ''
+    }
+  });
 
   useEffect(() => {
     // Load Calendly widget script
@@ -41,9 +58,23 @@ const Contact = () => {
   }, []);
 
   const handleFormSubmit = async (data: ContactFormData, contactPerson: 'reuven' | 'hila') => {
+    console.log('Form submission started', { data, contactPerson });
+    
+    // Validate required fields
+    if (!data.name || !data.email || !data.field || !data.stage || !data.message) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
+      console.log('Calling supabase function...');
+      
       const { data: response, error } = await supabase.functions.invoke('send-contact-email', {
         body: {
           ...data,
@@ -51,10 +82,15 @@ const Contact = () => {
         }
       });
 
+      console.log('Supabase function response:', { response, error });
+
       if (error) {
+        console.error('Supabase function error:', error);
         throw error;
       }
 
+      console.log('Success! Form submitted successfully');
+      
       toast({
         title: "Message sent successfully!",
         description: "Thank you for reaching out. We'll get back to you soon.",
@@ -120,39 +156,54 @@ const Contact = () => {
                 <CardContent className="space-y-6">
                   <form onSubmit={reuvenForm.handleSubmit((data) => handleFormSubmit(data, 'reuven'))} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="reuven-name">Full Name</Label>
+                      <Label htmlFor="reuven-name">Full Name *</Label>
                       <Input 
                         id="reuven-name" 
                         placeholder="Your full name" 
-                        {...reuvenForm.register('name', { required: true })}
+                        {...reuvenForm.register('name', { required: 'Name is required' })}
                       />
+                      {reuvenForm.formState.errors.name && (
+                        <p className="text-sm text-red-600">{reuvenForm.formState.errors.name.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="reuven-email">Email Address</Label>
+                      <Label htmlFor="reuven-email">Email Address *</Label>
                       <Input 
                         id="reuven-email" 
                         type="email" 
                         placeholder="your.email@example.com" 
-                        {...reuvenForm.register('email', { required: true })}
+                        {...reuvenForm.register('email', { 
+                          required: 'Email is required',
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: 'Invalid email address'
+                          }
+                        })}
                       />
+                      {reuvenForm.formState.errors.email && (
+                        <p className="text-sm text-red-600">{reuvenForm.formState.errors.email.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="reuven-field">Field of Study</Label>
+                      <Label htmlFor="reuven-field">Field of Study *</Label>
                       <Input 
                         id="reuven-field" 
                         placeholder="e.g., Computer Science, Psychology, etc." 
-                        {...reuvenForm.register('field', { required: true })}
+                        {...reuvenForm.register('field', { required: 'Field of study is required' })}
                       />
+                      {reuvenForm.formState.errors.field && (
+                        <p className="text-sm text-red-600">{reuvenForm.formState.errors.field.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="reuven-stage">Current Stage</Label>
+                      <Label htmlFor="reuven-stage">Current Stage *</Label>
                       <select 
                         id="reuven-stage" 
                         className="w-full p-2 border border-gray-300 rounded-md"
-                        {...reuvenForm.register('stage', { required: true })}
+                        {...reuvenForm.register('stage', { required: 'Please select your current stage' })}
                       >
                         <option value="">Select your current stage</option>
                         <option value="early-phd">Early PhD (1st-2nd year)</option>
@@ -161,16 +212,22 @@ const Contact = () => {
                         <option value="writing">Writing dissertation</option>
                         <option value="recent-grad">Recent PhD graduate</option>
                       </select>
+                      {reuvenForm.formState.errors.stage && (
+                        <p className="text-sm text-red-600">{reuvenForm.formState.errors.stage.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="reuven-message">How can Reuven help you?</Label>
+                      <Label htmlFor="reuven-message">How can Reuven help you? *</Label>
                       <Textarea 
                         id="reuven-message" 
                         placeholder="Tell us about your specific challenges or goals..."
                         rows={4}
-                        {...reuvenForm.register('message', { required: true })}
+                        {...reuvenForm.register('message', { required: 'Message is required' })}
                       />
+                      {reuvenForm.formState.errors.message && (
+                        <p className="text-sm text-red-600">{reuvenForm.formState.errors.message.message}</p>
+                      )}
                     </div>
                     
                     <Button 
@@ -231,39 +288,54 @@ const Contact = () => {
                 <CardContent className="space-y-6">
                   <form onSubmit={hilaForm.handleSubmit((data) => handleFormSubmit(data, 'hila'))} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="hila-name">Full Name</Label>
+                      <Label htmlFor="hila-name">Full Name *</Label>
                       <Input 
                         id="hila-name" 
                         placeholder="Your full name" 
-                        {...hilaForm.register('name', { required: true })}
+                        {...hilaForm.register('name', { required: 'Name is required' })}
                       />
+                      {hilaForm.formState.errors.name && (
+                        <p className="text-sm text-red-600">{hilaForm.formState.errors.name.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="hila-email">Email Address</Label>
+                      <Label htmlFor="hila-email">Email Address *</Label>
                       <Input 
                         id="hila-email" 
                         type="email" 
                         placeholder="your.email@example.com" 
-                        {...hilaForm.register('email', { required: true })}
+                        {...hilaForm.register('email', { 
+                          required: 'Email is required',
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: 'Invalid email address'
+                          }
+                        })}
                       />
+                      {hilaForm.formState.errors.email && (
+                        <p className="text-sm text-red-600">{hilaForm.formState.errors.email.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="hila-field">Field of Study</Label>
+                      <Label htmlFor="hila-field">Field of Study *</Label>
                       <Input 
                         id="hila-field" 
                         placeholder="e.g., Computer Science, Psychology, etc." 
-                        {...hilaForm.register('field', { required: true })}
+                        {...hilaForm.register('field', { required: 'Field of study is required' })}
                       />
+                      {hilaForm.formState.errors.field && (
+                        <p className="text-sm text-red-600">{hilaForm.formState.errors.field.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="hila-stage">Current Stage</Label>
+                      <Label htmlFor="hila-stage">Current Stage *</Label>
                       <select 
                         id="hila-stage" 
                         className="w-full p-2 border border-gray-300 rounded-md"
-                        {...hilaForm.register('stage', { required: true })}
+                        {...hilaForm.register('stage', { required: 'Please select your current stage' })}
                       >
                         <option value="">Select your current stage</option>
                         <option value="early-phd">Early PhD (1st-2nd year)</option>
@@ -272,16 +344,22 @@ const Contact = () => {
                         <option value="writing">Writing dissertation</option>
                         <option value="recent-grad">Recent PhD graduate</option>
                       </select>
+                      {hilaForm.formState.errors.stage && (
+                        <p className="text-sm text-red-600">{hilaForm.formState.errors.stage.message}</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="hila-message">How can Hila help you?</Label>
+                      <Label htmlFor="hila-message">How can Hila help you? *</Label>
                       <Textarea 
                         id="hila-message" 
                         placeholder="Tell us about your specific challenges or goals..."
                         rows={4}
-                        {...hilaForm.register('message', { required: true })}
+                        {...hilaForm.register('message', { required: 'Message is required' })}
                       />
+                      {hilaForm.formState.errors.message && (
+                        <p className="text-sm text-red-600">{hilaForm.formState.errors.message.message}</p>
+                      )}
                     </div>
                     
                     <Button 
