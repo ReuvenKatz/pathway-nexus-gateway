@@ -40,10 +40,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("=== SENDING NOTIFICATION EMAIL ===");
     
-    // Send notification email to you using your email as from address (lowercase)
+    // Send notification email - both from and to use reuven.katz@gmail.com
     const notificationResponse = await resend.emails.send({
-      from: "reuven.katz@gmail.com", // Using lowercase
-      to: ["reuven.katz@gmail.com"], // Using lowercase
+      from: "reuven.katz@gmail.com",
+      to: ["reuven.katz@gmail.com"],
       subject: `🔔 New Contact Form: ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'} - ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -83,27 +83,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("=== SENDING CONFIRMATION EMAIL ===");
 
-    // Send confirmation email to the user using your email as from address (lowercase)
+    // Send confirmation email - both from and to use reuven.katz@gmail.com
     const confirmationResponse = await resend.emails.send({
-      from: "reuven.katz@gmail.com", // Using lowercase
-      to: [email],
-      subject: "Thank you for contacting PhD Success Consulting!",
+      from: "reuven.katz@gmail.com",
+      to: ["reuven.katz@gmail.com"],
+      subject: `Confirmation: Message from ${name} (${email})`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2E4A87;">Thank you for reaching out, ${name}!</h2>
+          <h2 style="color: #2E4A87;">Contact Form Confirmation</h2>
           
-          <p>We have received your message and ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'} will get back to you as soon as possible.</p>
+          <p>A message was submitted through the contact form by <strong>${name}</strong> (${email}).</p>
           
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #2E4A87; margin-top: 0;">Your message:</h3>
-            <p style="line-height: 1.6;">${message}</p>
+            <h3 style="color: #2E4A87; margin-top: 0;">Form Details:</h3>
+            <p><strong>Contact Person:</strong> ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'}</p>
+            <p><strong>Field of Study:</strong> ${field}</p>
+            <p><strong>Current Stage:</strong> ${stage}</p>
+            <p><strong>Message:</strong></p>
+            <p style="line-height: 1.6; border-left: 3px solid #2E4A87; padding-left: 15px; margin-left: 10px;">${message}</p>
           </div>
           
-          <p>We typically respond within 24-48 hours during business days.</p>
+          <p>Please respond directly to <strong>${email}</strong> to follow up with this inquiry.</p>
           
-          <div style="margin-top: 30px;">
-            <p>Best regards,<br>
-            <strong>PhD Success Consulting Team</strong></p>
+          <div style="margin-top: 30px; font-size: 12px; color: #6c757d;">
+            <p>Timestamp: ${new Date().toLocaleString()}</p>
           </div>
         </div>
       `,
