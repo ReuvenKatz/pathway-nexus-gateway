@@ -40,20 +40,22 @@ const Contact = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="reuven" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-lg h-12">
-            <TabsTrigger 
-              value="reuven" 
-              className="data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white text-gray-700 font-medium py-2 px-6 rounded-md transition-all duration-200"
-            >
-              Contact Reuven
-            </TabsTrigger>
-            <TabsTrigger 
-              value="hila" 
-              className="data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white text-gray-700 font-medium py-2 px-6 rounded-md transition-all duration-200"
-            >
-              Contact Hila
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center mb-8">
+            <TabsList className="grid w-full max-w-md grid-cols-2 h-12 bg-gray-100 p-1 rounded-lg">
+              <TabsTrigger 
+                value="reuven" 
+                className="text-sm font-medium py-2 px-4 rounded-md transition-all data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                Contact Reuven
+              </TabsTrigger>
+              <TabsTrigger 
+                value="hila" 
+                className="text-sm font-medium py-2 px-4 rounded-md transition-all data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                Contact Hila
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="reuven" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-12">
