@@ -27,53 +27,107 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const formData: ContactFormData = await req.json();
-    console.log("Received contact form submission:", formData);
+    console.log("=== CONTACT FORM SUBMISSION START ===");
+    console.log("Received contact form submission:", JSON.stringify(formData, null, 2));
 
     const { name, email, field, stage, message, contactPerson } = formData;
 
-    // Send notification email to you
+    // Validate required fields
+    if (!name || !email || !field || !stage || !message || !contactPerson) {
+      console.error("Missing required fields:", { name: !!name, email: !!email, field: !!field, stage: !!stage, message: !!message, contactPerson: !!contactPerson });
+      throw new Error("All fields are required");
+    }
+
+    console.log("=== SENDING NOTIFICATION EMAIL ===");
+    
+    // Send notification email to you with better from address
     const notificationResponse = await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>",
-      to: ["Reuven.Katz@gmail.com"], // You can change this to your preferred email
-      subject: `New Contact Form Submission - ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'}`,
+      from: "PhD Success Contact Form <noreply@resend.dev>", // Using resend.dev domain which should work
+      to: ["Reuven.Katz@gmail.com"],
+      subject: `🔔 New Contact Form: ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'} - ${name}`,
       html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Contact Person:</strong> ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'}</p>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Field of Study:</strong> ${field}</p>
-        <p><strong>Current Stage:</strong> ${stage}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-        <hr>
-        <p><em>This email was sent from the contact form on your website.</em></p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2E4A87; border-bottom: 2px solid #2E4A87; padding-bottom: 10px;">
+            New Contact Form Submission
+          </h2>
+          
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong style="color: #2E4A87;">Contact Person:</strong> ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'}</p>
+            <p><strong style="color: #2E4A87;">Name:</strong> ${name}</p>
+            <p><strong style="color: #2E4A87;">Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong style="color: #2E4A87;">Field of Study:</strong> ${field}</p>
+            <p><strong style="color: #2E4A87;">Current Stage:</strong> ${stage}</p>
+          </div>
+          
+          <div style="background-color: #fff; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px;">
+            <h3 style="color: #2E4A87; margin-top: 0;">Message:</h3>
+            <p style="line-height: 1.6;">${message}</p>
+          </div>
+          
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #dee2e6; font-size: 12px; color: #6c757d;">
+            <p>This email was sent from the contact form on your PhD Success Consulting website.</p>
+            <p>Timestamp: ${new Date().toLocaleString()}</p>
+          </div>
+        </div>
       `,
     });
+
+    console.log("Notification email response:", JSON.stringify(notificationResponse, null, 2));
+
+    if (notificationResponse.error) {
+      console.error("NOTIFICATION EMAIL ERROR:", notificationResponse.error);
+      throw new Error(`Failed to send notification email: ${notificationResponse.error.message}`);
+    }
+
+    console.log("✅ Notification email sent successfully! ID:", notificationResponse.data?.id);
+
+    console.log("=== SENDING CONFIRMATION EMAIL ===");
 
     // Send confirmation email to the user
     const confirmationResponse = await resend.emails.send({
-      from: "PhD Success Consulting <onboarding@resend.dev>",
+      from: "PhD Success Consulting <noreply@resend.dev>",
       to: [email],
-      subject: "Thank you for contacting us!",
+      subject: "Thank you for contacting PhD Success Consulting!",
       html: `
-        <h2>Thank you for reaching out, ${name}!</h2>
-        <p>We have received your message and will get back to you as soon as possible.</p>
-        <p><strong>Your message:</strong></p>
-        <p>${message}</p>
-        <p>We typically respond within 24-48 hours.</p>
-        <p>Best regards,<br>PhD Success Consulting Team</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2E4A87;">Thank you for reaching out, ${name}!</h2>
+          
+          <p>We have received your message and ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'} will get back to you as soon as possible.</p>
+          
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #2E4A87; margin-top: 0;">Your message:</h3>
+            <p style="line-height: 1.6;">${message}</p>
+          </div>
+          
+          <p>We typically respond within 24-48 hours during business days.</p>
+          
+          <div style="margin-top: 30px;">
+            <p>Best regards,<br>
+            <strong>PhD Success Consulting Team</strong></p>
+          </div>
+        </div>
       `,
     });
 
-    console.log("Notification email sent:", notificationResponse);
-    console.log("Confirmation email sent:", confirmationResponse);
+    console.log("Confirmation email response:", JSON.stringify(confirmationResponse, null, 2));
+
+    if (confirmationResponse.error) {
+      console.error("CONFIRMATION EMAIL ERROR:", confirmationResponse.error);
+      // Don't throw here - notification email is more important
+      console.log("⚠️ Confirmation email failed, but notification succeeded");
+    } else {
+      console.log("✅ Confirmation email sent successfully! ID:", confirmationResponse.data?.id);
+    }
+
+    console.log("=== CONTACT FORM SUBMISSION COMPLETE ===");
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Emails sent successfully",
+        message: "Form submitted successfully",
         notificationId: notificationResponse.data?.id,
-        confirmationId: confirmationResponse.data?.id
+        confirmationId: confirmationResponse.data?.id,
+        timestamp: new Date().toISOString()
       }), 
       {
         status: 200,
@@ -84,11 +138,16 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: any) {
-    console.error("Error in send-contact-email function:", error);
+    console.error("=== CONTACT FORM ERROR ===");
+    console.error("Error details:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error.message,
+        timestamp: new Date().toISOString()
       }),
       {
         status: 500,
