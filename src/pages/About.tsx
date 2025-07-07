@@ -10,7 +10,7 @@ const About = () => {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-serif font-bold text-[#2E4A87] mb-6">
+          <h1 className="text-4xl lg:text-5xl font-girassol font-bold text-[#2E4A87] mb-6">
             About Us
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -20,10 +20,22 @@ const About = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="reuven" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="reuven" className="text-lg">About Reuven</TabsTrigger>
-            <TabsTrigger value="hila" className="text-lg">About Hila</TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center mb-8">
+            <TabsList className="grid w-full max-w-md grid-cols-2 h-12 bg-gray-100 p-1 rounded-lg">
+              <TabsTrigger 
+                value="reuven" 
+                className="text-sm font-medium py-2 px-4 rounded-md transition-all data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                About Reuven
+              </TabsTrigger>
+              <TabsTrigger 
+                value="hila" 
+                className="text-sm font-medium py-2 px-4 rounded-md transition-all data-[state=active]:bg-[#2E4A87] data-[state=active]:text-white data-[state=active]:shadow-sm"
+              >
+                About Hila
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Reuven Tab Content */}
           <TabsContent value="reuven" className="space-y-8">
