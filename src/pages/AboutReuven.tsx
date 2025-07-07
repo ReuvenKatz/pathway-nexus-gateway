@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -30,14 +31,14 @@ const AboutReuven = () => {
               <p className="text-gray-700">
                 My academic career spans over two decades in research and higher education. Over the years, many students have 
                 approached me for help and guidance in completing the dissertation. This led to my developing a method for teaching how to 
-                manage doctoral research effectively. I also assist recent graduate PhDs with choosing their career path and navigating 
+                manage doctoral research effectively. I also assist recently graduated PhDs with choosing their career path and navigating 
                 rejoining the workforce. My coaching methodology is grounded in extensive experience, empathy, and strategies proven to be 
                 effective.
               </p>
 
               <p className="text-gray-700">
                 My educational background includes a BSc and MSc from the Israel Institute of Technology, a PhD in Engineering from the 
-                University of Michigan, and an Executive MBA from the Tel Aviv University. I served as a Research Scientist at the University of 
+                University of Michigan, and an Executive MBA from Tel Aviv University. I served as a Research Scientist at the University of 
                 Michigan before joining the faculty of the Israel Institute of Technology as a Professor of Mechanical Engineering.
               </p>
 
@@ -45,7 +46,7 @@ const AboutReuven = () => {
                 I have worked with doctoral students from diverse disciplines and institutions, providing individualized one-on-one coaching. 
                 Throughout my career, I have conducted workshops for doctoral students in the United States, United Kingdom, Israel, Italy, 
                 and Poland. This international perspective has deepened my understanding of the shared universal challenges facing doctoral 
-                students. Students who attended my workshops consistently reported enhanced clarity about their 
+                students. Students who attended my workshops and consulted with me consistently reported increased clarity about their 
                 research direction, enhanced confidence in their abilities, and the development of concrete, actionable plans for completing 
                 the dissertation and moving forward with their careers.
               </p>
@@ -88,9 +89,14 @@ const AboutReuven = () => {
               {/* Journal Articles Section */}
               <div>
                 <h3 className="text-xl font-serif font-bold text-[#2E4A87] mb-4">Journal Articles</h3>
-                <p className="text-gray-700">
-                  Additional publications and research articles available upon request.
-                </p>
+                <div className="space-y-3 text-gray-700">
+                  <p>
+                    Katz, R. (2016). Challenges in doctoral research project management: A comparative study. <em>International Journal of Doctoral Studies</em>, 11, 105-125.
+                  </p>
+                  <p>
+                    Katz, R. (2018). Crises in a doctoral research project: A comparative study. <em>International Journal of Doctoral Studies</em>, 13, 211-231. <a href="https://doi.org/10.28945/4044" className="text-[#2E4A87] hover:underline" target="_blank" rel="noopener noreferrer">https://doi.org/10.28945/4044</a>
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>

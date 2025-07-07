@@ -11,6 +11,7 @@ import IndividualConsulting from "./pages/IndividualConsulting";
 import CareerGuidance from "./pages/CareerGuidance";
 import Testimonials from "./pages/Testimonials";
 import AboutReuven from "./pages/AboutReuven";
+import AboutHila from "./pages/AboutHila";
 import Contact from "./pages/Contact";
 import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/career-guidance" element={<CareerGuidance />} />
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/about-reuven" element={<AboutReuven />} />
+            <Route path="/about-hila" element={<AboutHila />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="*" element={<NotFound />} />
