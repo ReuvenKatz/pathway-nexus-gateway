@@ -9,14 +9,7 @@ const Header = () => {
   const location = useLocation();
 
   const navigation = [
-    { 
-      name: 'About Us', 
-      href: '#',
-      dropdown: [
-        { name: 'About Reuven', href: '/about-reuven' },
-        { name: 'About Hila', href: '/about-hila' }
-      ]
-    },
+    { name: 'About Us', href: '/about' },
     { 
       name: 'Services', 
       href: '#',

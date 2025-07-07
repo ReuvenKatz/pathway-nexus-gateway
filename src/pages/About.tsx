@@ -1,66 +1,164 @@
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+
 const About = () => {
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="mb-8">
-          <nav className="flex items-center text-sm text-gray-500 mb-6">
-            <a href="/" className="hover:text-[#2E4A87]">🏠 Back to Home</a>
-          </nav>
-          
-          <h1 className="text-4xl font-serif font-bold text-[#2E4A87] mb-8">About Us</h1>
-        </div>
-
-        <div className="prose prose-lg max-w-none">
-          <p className="text-gray-700 mb-6">
-            Pursuing a doctorate involves far more than conducting research—it requires knowledge of how to master an 
-            extensive project which often is loosely structured and has limited institutional guidance. While doctoral students 
-            receive rigorous training in their specialized fields, they seldom receive preparation in project management principles 
-            that are essential for success in long-term, complex research projects. This often leads to stagnation and frustration.
-          </p>
-
-          <p className="text-gray-700 mb-8">
-            Our mission is to bridge this gap, helping students overcome obstacles and develop the skills to thrive throughout 
-            their academic journey. We specialize in assisting doctoral students to develop strategic and organizational skills to 
-            bring the dissertation to a successful completion.
-          </p>
-
-          <h2 className="text-2xl font-serif font-bold text-[#2E4A87] mb-6">
-            Our consultancy offers support in several key areas:
-          </h2>
-
-          <ul className="space-y-3 text-gray-700 mb-8">
-            <li className="flex items-start">
-              <span className="text-[#2E4A87] mr-2">•</span>
-              Project organization and time management.
-            </li>
-            <li className="flex items-start">
-              <span className="text-[#2E4A87] mr-2">•</span>
-              Development of productive work habits.
-            </li>
-            <li className="flex items-start">
-              <span className="text-[#2E4A87] mr-2">•</span>
-              Building effective advisor-student relationships.
-            </li>
-            <li className="flex items-start">
-              <span className="text-[#2E4A87] mr-2">•</span>
-              Proactive identification and avoidance of common obstacles that derail doctoral progress.
-            </li>
-            <li className="flex items-start">
-              <span className="text-[#2E4A87] mr-2">•</span>
-              Navigating your transition between doctoral studies and your career.
-            </li>
-          </ul>
-
-          <p className="text-gray-700 mb-6">
-            We invite you to explore this website to learn more about our approach and services. For direct inquiries, please 
-            contact <a href="mailto:Reuven.Katz@gmail.com" className="text-[#2E4A87] hover:underline">Reuven.Katz@gmail.com</a>.
-          </p>
-
-          <p className="text-gray-700">
-            I welcome the opportunity to discuss how we can work together to advance your doctoral success.
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl lg:text-5xl font-serif font-bold text-[#2E4A87] mb-6">
+            About Us
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Meet our team of experienced academic consultants dedicated to helping doctoral students succeed.
           </p>
         </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="reuven" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="reuven" className="text-lg">About Reuven</TabsTrigger>
+            <TabsTrigger value="hila" className="text-lg">About Hila</TabsTrigger>
+          </TabsList>
+
+          {/* Reuven Tab Content */}
+          <TabsContent value="reuven" className="space-y-8">
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Left Column - Photo */}
+              <div className="lg:col-span-1">
+                <div className="bg-gray-100 rounded-lg aspect-[3/4] flex items-center justify-center">
+                  <span className="text-gray-500">Professional Photo Placeholder</span>
+                </div>
+              </div>
+
+              {/* Right Column - Content */}
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h2 className="text-2xl font-serif font-bold text-[#2E4A87] mb-4">
+                    Academic Coach & Consultant for Doctoral Students and PhDs
+                  </h2>
+                </div>
+
+                <div className="prose prose-lg max-w-none space-y-4">
+                  <p className="text-gray-700">
+                    My academic career spans over two decades in research and higher education. Over the years, many students have 
+                    approached me for help and guidance in completing the dissertation. This led to my developing a method for teaching how to 
+                    manage doctoral research effectively. I also assist recently graduated PhDs with choosing their career path and navigating 
+                    rejoining the workforce. My coaching methodology is grounded in extensive experience, empathy, and strategies proven to be 
+                    effective.
+                  </p>
+
+                  <p className="text-gray-700">
+                    My educational background includes a BSc and MSc from the Israel Institute of Technology, a PhD in Engineering from the 
+                    University of Michigan, and an Executive MBA from Tel Aviv University. I served as a Research Scientist at the University of 
+                    Michigan before joining the faculty of the Israel Institute of Technology as a Professor of Mechanical Engineering.
+                  </p>
+
+                  <p className="text-gray-700">
+                    I have worked with doctoral students from diverse disciplines and institutions, providing individualized one-on-one coaching. 
+                    Throughout my career, I have conducted workshops for doctoral students in the United States, United Kingdom, Israel, Italy, 
+                    and Poland. This international perspective has deepened my understanding of the shared universal challenges facing doctoral 
+                    students. Students who attended my workshops and consulted with me consistently reported increased clarity about their 
+                    research direction, enhanced confidence in their abilities, and the development of concrete, actionable plans for completing 
+                    the dissertation and moving forward with their careers.
+                  </p>
+
+                  <p className="text-gray-700">
+                    As PhD consultant, I now collaborate with my daughter Hila, whose background in arts, humanities and education compliments 
+                    my own.
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                  <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white px-8 py-3">
+                    Contact Reuven
+                  </Button>
+                  <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
+                    <Link to="/schedule">
+                      Schedule a Meeting
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Publications Section */}
+            <div className="mt-16">
+              <Card className="bg-gray-50">
+                <CardHeader>
+                  <CardTitle className="text-3xl font-serif text-[#2E4A87]">Publications</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  {/* Book Section */}
+                  <div>
+                    <h3 className="text-xl font-serif font-bold text-[#2E4A87] mb-4">Book</h3>
+                    <p className="text-gray-700">
+                      Katz, R. (2009). <em>Shorten the Time to Doctorate: A Guide to Managing a Ph.D. as a Project</em>. AuthorHouse.
+                    </p>
+                  </div>
+
+                  {/* Journal Articles Section */}
+                  <div>
+                    <h3 className="text-xl font-serif font-bold text-[#2E4A87] mb-4">Journal Articles</h3>
+                    <div className="space-y-3 text-gray-700">
+                      <p>
+                        Katz, R. (2016). Challenges in doctoral research project management: A comparative study. <em>International Journal of Doctoral Studies</em>, 11, 105-125.
+                      </p>
+                      <p>
+                        Katz, R. (2018). Crises in a doctoral research project: A comparative study. <em>International Journal of Doctoral Studies</em>, 13, 211-231. <a href="https://doi.org/10.28945/4044" className="text-[#2E4A87] hover:underline" target="_blank" rel="noopener noreferrer">https://doi.org/10.28945/4044</a>
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Hila Tab Content */}
+          <TabsContent value="hila" className="space-y-8">
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Left Column - Photo */}
+              <div className="lg:col-span-1">
+                <div className="bg-gray-100 rounded-lg aspect-[3/4] flex items-center justify-center">
+                  <span className="text-gray-500">Professional Photo Placeholder</span>
+                </div>
+              </div>
+
+              {/* Right Column - Content */}
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h2 className="text-2xl font-serif font-bold text-[#2E4A87] mb-4">
+                    Academic Coach & Consultant for Doctoral Students and PhDs
+                  </h2>
+                </div>
+
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-gray-700">
+                    Content about Hila will be added here. Please provide the text you'd like to include for Hila's biography, 
+                    background, expertise, and approach to doctoral student coaching.
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                  <Button className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white px-8 py-3">
+                    Contact Hila
+                  </Button>
+                  <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
+                    <Link to="/schedule">
+                      Schedule a Meeting
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
