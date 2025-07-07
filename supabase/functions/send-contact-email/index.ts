@@ -40,10 +40,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("=== SENDING NOTIFICATION EMAIL ===");
     
-    // Send notification email to you with better from address
+    // Send notification email to you using your email as from address (lowercase)
     const notificationResponse = await resend.emails.send({
-      from: "PhD Success Contact Form <noreply@resend.dev>", // Using resend.dev domain which should work
-      to: ["Reuven.Katz@gmail.com"],
+      from: "reuven.katz@gmail.com", // Using lowercase
+      to: ["reuven.katz@gmail.com"], // Using lowercase
       subject: `🔔 New Contact Form: ${contactPerson === 'reuven' ? 'Reuven' : 'Hila'} - ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -83,9 +83,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("=== SENDING CONFIRMATION EMAIL ===");
 
-    // Send confirmation email to the user
+    // Send confirmation email to the user using your email as from address (lowercase)
     const confirmationResponse = await resend.emails.send({
-      from: "PhD Success Consulting <noreply@resend.dev>",
+      from: "reuven.katz@gmail.com", // Using lowercase
       to: [email],
       subject: "Thank you for contacting PhD Success Consulting!",
       html: `
