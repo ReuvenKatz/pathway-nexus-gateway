@@ -10,14 +10,7 @@ const Header = () => {
 
   const navigation = [
     { name: 'About Us', href: '/about' },
-    { 
-      name: 'Services', 
-      href: '#',
-      dropdown: [
-        { name: 'Individual Consulting', href: '/individual-consulting' },
-        { name: 'Career Guidance', href: '/career-guidance' }
-      ]
-    },
+    { name: 'Services', href: '/services' },
     { name: 'Testimonials', href: '/testimonials' },
     { name: 'Contact Us', href: '/contact' }
   ];
@@ -38,39 +31,17 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
-              <div key={item.name} className="relative group">
-                {item.dropdown ? (
-                  <div className="relative">
-                    <button className="text-gray-700 hover:text-[#2E4A87] px-3 py-2 text-sm font-medium transition-colors">
-                      {item.name}
-                    </button>
-                    <div className="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                      <div className="py-1">
-                        {item.dropdown.map((subItem) => (
-                          <Link
-                            key={subItem.name}
-                            to={subItem.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2E4A87]"
-                          >
-                            {subItem.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className={`px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive(item.href)
-                        ? 'text-[#2E4A87] border-b-2 border-[#2E4A87]'
-                        : 'text-gray-700 hover:text-[#2E4A87]'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                )}
-              </div>
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive(item.href)
+                    ? 'text-[#2E4A87] border-b-2 border-[#2E4A87]'
+                    : 'text-gray-700 hover:text-[#2E4A87]'
+                }`}
+              >
+                {item.name}
+              </Link>
             ))}
             <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
               <Link to="/schedule">
@@ -95,37 +66,18 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
               {navigation.map((item) => (
-                <div key={item.name}>
-                  {item.dropdown ? (
-                    <div>
-                      <div className="text-gray-700 block px-3 py-2 text-base font-medium">
-                        {item.name}
-                      </div>
-                      {item.dropdown.map((subItem) => (
-                        <Link
-                          key={subItem.name}
-                          to={subItem.href}
-                          className="text-gray-500 block px-6 py-2 text-sm hover:text-[#2E4A87]"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      className={`block px-3 py-2 text-base font-medium ${
-                        isActive(item.href)
-                          ? 'text-[#2E4A87] bg-gray-50'
-                          : 'text-gray-700 hover:text-[#2E4A87]'
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`block px-3 py-2 text-base font-medium ${
+                    isActive(item.href)
+                      ? 'text-[#2E4A87] bg-gray-50'
+                      : 'text-gray-700 hover:text-[#2E4A87]'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
               ))}
               <div className="px-3 py-2">
                 <Button asChild className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
