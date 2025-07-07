@@ -1,6 +1,6 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const AboutReuven = () => {
   return (
@@ -62,14 +62,9 @@ const AboutReuven = () => {
                 Contact Reuven
               </Button>
               <Button asChild variant="outline" className="border-[#2E4A87] text-[#2E4A87] hover:bg-[#2E4A87] hover:text-white px-8 py-3">
-                <a 
-                  href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="Schedule a meeting with Reuven Katz"
-                >
+                <Link to="/schedule">
                   Schedule a Meeting
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

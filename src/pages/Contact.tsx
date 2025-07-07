@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -95,14 +94,9 @@ const Contact = () => {
                   Ready to start your consultation? Schedule a meeting directly through our calendar system.
                 </p>
                 <Button asChild className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                  <a 
-                    href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    aria-label="Schedule a meeting with Reuven Katz"
-                  >
+                  <Link to="/schedule">
                     Schedule Meeting
-                  </a>
+                  </Link>
                 </Button>
               </CardContent>
             </Card>

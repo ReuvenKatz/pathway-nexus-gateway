@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -73,14 +72,9 @@ const Header = () => {
               </div>
             ))}
             <Button asChild className="bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-              <a 
-                href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                aria-label="Schedule a meeting with Reuven Katz"
-              >
+              <Link to="/schedule">
                 Schedule Meeting
-              </a>
+              </Link>
             </Button>
           </div>
 
@@ -134,15 +128,9 @@ const Header = () => {
               ))}
               <div className="px-3 py-2">
                 <Button asChild className="w-full bg-[#2E4A87] hover:bg-[#1e3a6f] text-white">
-                  <a 
-                    href="https://calendly.com/reuven-katz/one-on-one-with-reuven" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    aria-label="Schedule a meeting with Reuven Katz"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
+                  <Link to="/schedule" onClick={() => setIsMenuOpen(false)}>
                     Schedule Meeting
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>
